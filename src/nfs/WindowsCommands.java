@@ -1,10 +1,6 @@
 package nfs;
 
-import java.io.File;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-public class WindowsCommands implements CommandFactory{
+public class WindowsCommands extends SystemCommands {
 
     ProcessBuilder builder;
 
