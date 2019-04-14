@@ -15,16 +15,16 @@ public class DataClient {
             Scanner serverInput = new Scanner(serverSocket.getInputStream());
             Scanner keyBoard = new Scanner(System.in);
             System.out.println("Conectado ao servidor");
+
             while(true) {
                 System.out.print("> ");
-
                 String command = keyBoard.nextLine();
                 serverOutput.println(command);
                 serverOutput.flush();
 
-                while (serverInput.hasNext()){
-                    System.out.println(serverInput.nextLine());
-                }
+//                while (serverInput.hasNextLine()){
+//                    System.out.println(serverInput.nextLine());
+//                }
             }
         } catch (IOException e) {
             e.printStackTrace();

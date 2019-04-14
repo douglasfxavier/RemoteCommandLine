@@ -1,6 +1,7 @@
 package comm;
 
 import nfs.CommandProcessBuilder;
+import nfs.SystemCommands;
 import nfs.WindowsCommands;
 
 import java.io.IOException;
@@ -14,46 +15,48 @@ public class DataServer {
         try{
             ServerSocket serverSocket = new ServerSocket(6000);
             ProcessBuilder builder = new ProcessBuilder();
-
-            System.out.println("SERVER LISTENING...");
-
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("Conexão aceita");
-            Scanner clientInput = new Scanner(clientSocket.getInputStream());
-            PrintWriter clientOutput = new PrintWriter(clientSocket.getOutputStream());
-            WindowsCommands windowsCommands = new WindowsCommands();
             CommandProcessBuilder commandProcessBuilder = new CommandProcessBuilder();
-            while(clientInput.hasNext()){
-
-                String command = clientInput.nextLine();
-                if (command.equals("dir")){
-
-                    builder = windowsCommands.readDirectory("D:");
-                    commandProcessBuilder.exec(builder,clientOutput);}
 
 
-
-/*                boolean isWindows = System.getProperty("os.name").
-                        toLowerCase().startsWith("windows");
-
-                if (isWindows){
-                    WindowsCommands windowsCommands = new WindowsCommands();
-                    CommandProcessBuilder commandProcessBuilder = new CommandProcessBuilder();
-                    //builder = windowsCommands.readDirectory("D:");
-                    //commandProcessBuilder.exec(builder,clientOutput);
-                    //builder = windowsCommands.createDirectory("D:\\pastadeteste\\novapasta");
-                    //builder = windowsCommands.createFile("Tudo novo de novo","teste.txt");
-                    //builder = windowsCommands.renameFile("teste.txt","novoteste.txt");
-                    builder = windowsCommands.removeFile("novoteste.txt");
-                    commandProcessBuilder.exec(builder,clientOutput);
-
-                }*/
-
+            SystemCommands systemCommands = null;
+            boolean isWindows = System.getProperty("os.name").
+                    toLowerCase().startsWith("windows");
+            if (isWindows){
+                systemCommands = new WindowsCommands();
             }
 
-/*            while (clientInput.hasNext()){
-                System.out.println(clientInput.nextLine());
-            }*/
+            System.out.println("Server listening...");
+            Socket clientSocket = serverSocket.accept();
+            System.out.println("Conexão aceita!");
+            Scanner clientInput = new Scanner(clientSocket.getInputStream());
+            PrintWriter clientOutput = new PrintWriter(clientSocket.getOutputStream());
+
+            while(clientInput.hasNextLine()){
+
+                String[] commands = clientInput.nextLine().split(" ");
+
+                switch(commands[0].toUpperCase()) {
+                    case "READDIR":
+                        builder = systemCommands.readDirectory(commands[1]);
+                        break;
+                    case "CREATEDIR":
+                        builder = systemCommands.createDirectory(commands[1]);
+                        break;
+                    case "CREATEFILE":
+                        builder = systemCommands.createFile(commands[1],commands[2]);
+                        break;
+                    case "RENAMEFILE":
+                        builder = systemCommands.renameFile(commands[1],commands[2]);
+                        break;
+                    case "REMOVEFILE":
+                        builder = systemCommands.removeFile(commands[1]);
+                        break;
+                    default:
+                        clientOutput.println("Comando não encontrado!");
+                        clientOutput.flush();
+                }
+                commandProcessBuilder.exec(builder, clientOutput);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
