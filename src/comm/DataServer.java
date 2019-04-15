@@ -4,7 +4,9 @@ import nfs.CommandProcessBuilder;
 import nfs.SystemCommands;
 import nfs.WindowsCommands;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -28,12 +30,15 @@ public class DataServer {
             System.out.println("Server listening...");
             Socket clientSocket = serverSocket.accept();
             System.out.println("Conexão aceita!");
-            Scanner clientInput = new Scanner(clientSocket.getInputStream());
+            BufferedReader clientInput = new BufferedReader(
+                    new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter clientOutput = new PrintWriter(clientSocket.getOutputStream());
 
-            while(clientInput.hasNextLine()){
+            String inputLine;
+            while(clientSocket.isConnected() &&
+                    (inputLine = clientInput.readLine())!= null){
 
-                String[] commands = clientInput.nextLine().split(" ");
+                String[] commands = inputLine.split(" ");
 
                 if (commands.length <=1){
                     clientOutput.println("Parâmetros insuficientes");
