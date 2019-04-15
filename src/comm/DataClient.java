@@ -11,7 +11,7 @@ public class DataClient {
         try {
             Socket clientSocket = new Socket("localhost",6000);
 
-            PrintWriter serverOutput = new PrintWriter( clientSocket.getOutputStream());
+            PrintWriter clientOutput = new PrintWriter( clientSocket.getOutputStream());
             Scanner clientInput = new Scanner( clientSocket.getInputStream());
             Scanner keyBoard = new Scanner(System.in);
             System.out.println("Conectado ao servidor");
@@ -19,8 +19,8 @@ public class DataClient {
             while( clientSocket.isConnected()) {
                 System.out.print('>');
                 String command = keyBoard.nextLine();
-                serverOutput.println(command);
-                serverOutput.flush();
+                clientOutput.println(command);
+                clientOutput.flush();
 
                 while (clientInput.hasNextLine()){
                     System.out.println(clientInput.nextLine());
