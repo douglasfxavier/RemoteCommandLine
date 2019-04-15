@@ -22,19 +22,19 @@ public class WindowsCommands extends SystemCommands {
 
     @Override
     public ProcessBuilder readDirectory(String directory) {
-        builder.command("cmd.exe", "/c","dir " + directory);
+        builder.command("cmd.exe", "/c","dir",directory);
         return builder;
     }
 
     @Override
     public ProcessBuilder renameFile(String currentName, String newName) {
-        builder.command("cmd.exe", "/c","ren ", currentName, newName);
+        builder.command("cmd.exe", "/c","ren", currentName, newName);
         return builder;
     }
 
     @Override
     public ProcessBuilder removeFile(String fileName) {
-        builder.command("cmd.exe", "/c","del ", fileName);
+        builder.command("cmd.exe", "/c","del", fileName);
         return builder;
    }
 }
