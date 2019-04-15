@@ -23,7 +23,6 @@ public class DataClient {
                 System.out.print('>');
                 String command = keyBoard.nextLine();
                 clientOutput.println(command);
-                clientOutput.flush();
 
                 String inputLine;
                 while ((inputLine = clientInput.readLine())!=null){
