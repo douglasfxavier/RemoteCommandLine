@@ -9,22 +9,23 @@ public class DataClient {
 
     public static void main(String[] args) {
         try {
-            Socket serverSocket = new Socket("localhost",6000);
+            Socket clientSocket = new Socket("localhost",6000);
 
-            PrintWriter serverOutput = new PrintWriter(serverSocket.getOutputStream());
-            Scanner serverInput = new Scanner(serverSocket.getInputStream());
+            PrintWriter serverOutput = new PrintWriter( clientSocket.getOutputStream());
+            Scanner clientInput = new Scanner( clientSocket.getInputStream());
             Scanner keyBoard = new Scanner(System.in);
             System.out.println("Conectado ao servidor");
 
-            while(true) {
-                System.out.print("> ");
+            while( clientSocket.isConnected()) {
+                System.out.print('>');
                 String command = keyBoard.nextLine();
                 serverOutput.println(command);
                 serverOutput.flush();
 
-//                while (serverInput.hasNextLine()){
-//                    System.out.println(serverInput.nextLine());
-//                }
+                while (clientInput.hasNextLine()){
+                    System.out.println(clientInput.nextLine());
+                }
+
             }
         } catch (IOException e) {
             e.printStackTrace();

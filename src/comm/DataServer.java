@@ -35,17 +35,29 @@ public class DataServer {
 
                 String[] commands = clientInput.nextLine().split(" ");
 
+                if (commands.length <=1){
+                    clientOutput.println("Parâmetros insuficientes");
+                    clientOutput.flush();
+                }
+
                 switch(commands[0].toUpperCase()) {
                     case "READDIR":
                         builder = systemCommands.readDirectory(commands[1]);
                         break;
                     case "CREATEDIR":
-                        builder = systemCommands.createDirectory(commands[1]);
+                        String folderName = commands[1];
+                        builder = systemCommands.createDirectory(folderName);
+                        clientOutput.println(String.format("A pasta %s foi criada com sucesso.",folderName));
+                        clientOutput.flush();
                         break;
                     case "CREATEFILE":
                         builder = systemCommands.createFile(commands[1],commands[2]);
                         break;
                     case "RENAMEFILE":
+                        if (commands.length <=2){
+                            clientOutput.println("Parâmetros insuficientes");
+                            clientOutput.flush();
+                        }
                         builder = systemCommands.renameFile(commands[1],commands[2]);
                         break;
                     case "REMOVEFILE":
