@@ -19,7 +19,8 @@ public class CommandProcessBuilder {
 
         int exitCode = process.waitFor();
         assert exitCode == 0;
-
+        out.println("ENDINPUT");
+        out.flush();
 
     }
 }
