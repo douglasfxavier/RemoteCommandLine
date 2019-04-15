@@ -36,43 +36,47 @@ public class DataServer {
 
             String inputLine;
             while(clientSocket.isConnected() &&
-                    (inputLine = clientInput.readLine())!= null){
+                    (inputLine = clientInput.readLine())!= null) {
 
                 String[] commands = inputLine.split(" ");
 
-                if (commands.length <=1){
+/*                if (commands.length <=1){
                     clientOutput.println("Parâmetros insuficientes");
                     clientOutput.flush();
-                }
+                }*/
 
-                switch(commands[0].toUpperCase()) {
+                switch (commands[0].toUpperCase()) {
                     case "READDIR":
                         builder = systemCommands.readDirectory(commands[1]);
                         break;
                     case "CREATEDIR":
                         String folderName = commands[1];
                         builder = systemCommands.createDirectory(folderName);
-                        clientOutput.println(String.format("A pasta %s foi criada com sucesso.",folderName));
+                        clientOutput.println(String.format("A pasta %s foi criada com sucesso.", folderName));
                         clientOutput.flush();
                         break;
                     case "CREATEFILE":
-                        builder = systemCommands.createFile(commands[1],commands[2]);
+                        builder = systemCommands.createFile(commands[1], commands[2]);
                         break;
                     case "RENAMEFILE":
-                        if (commands.length <=2){
+                        if (commands.length <= 2) {
                             clientOutput.println("Parâmetros insuficientes");
                             clientOutput.flush();
                         }
-                        builder = systemCommands.renameFile(commands[1],commands[2]);
+                        builder = systemCommands.renameFile(commands[1], commands[2]);
                         break;
                     case "REMOVEFILE":
                         builder = systemCommands.removeFile(commands[1]);
                         break;
                     default:
                         clientOutput.println("Comando não encontrado!");
+                        clientOutput.println("ENDINPUT");
                         clientOutput.flush();
+                        break;
                 }
-                commandProcessBuilder.exec(builder, clientOutput);
+                if (!builder.command().isEmpty()) {
+                    commandProcessBuilder.exec(builder, clientOutput);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
